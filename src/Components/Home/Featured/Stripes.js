@@ -43,7 +43,7 @@ class Stripes extends Component {
         enter={{
           background: [stripe.background],
           timing: {
-            delay: 500,
+            delay: stripe.delay,
             duration: 200,
             ease: easePolyOut
           },
