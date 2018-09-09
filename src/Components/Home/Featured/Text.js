@@ -32,8 +32,80 @@ class Text extends Component {
       }}
     </Animate>
   );
+
+  animateFirst = () => (
+    <Animate
+      show={true}
+      start={{
+        opacity: 0,
+        x: 503,
+        y: 450
+      }}
+      enter={{
+        opacity: [1],
+        timing: {
+          duration: 500,
+          ease: easePolyOut
+        },
+        x: [273],
+        y: [450]
+      }}>
+      {({ opacity, x, y }) => {
+        return (
+          <div
+            className="featured_first"
+            style={{
+              opacity,
+              transform: `translate(${x}px, ${y}px)`
+            }}>
+            League
+          </div>
+        );
+      }}
+    </Animate>
+  );
+
+  animateSecond = () => (
+    <Animate
+      show={true}
+      start={{
+        opacity: 0,
+        x: 503,
+        y: 586
+      }}
+      enter={{
+        opacity: [1],
+        timing: {
+          delay: 300,
+          duration: 500,
+          ease: easePolyOut
+        },
+        x: [273],
+        y: [586]
+      }}>
+      {({ opacity, x, y }) => {
+        return (
+          <div
+            className="featured_second"
+            style={{
+              opacity,
+              transform: `translate(${x}px, ${y}px)`
+            }}>
+            Championships
+          </div>
+        );
+      }}
+    </Animate>
+  );
+
   render() {
-    return <div className="featured_text">{this.animateNumber()}</div>;
+    return (
+      <div className="featured_text">
+        {this.animateNumber()}
+        {this.animateFirst()}
+        {this.animateSecond()}
+      </div>
+    );
   }
 }
 
