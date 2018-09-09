@@ -4,7 +4,6 @@ import Featured from './Featured';
 const Home = props => {
   return (
     <div className="bck_blue">
-      {}
       <Featured />
     </div>
   );
