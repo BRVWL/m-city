@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export const Tag = props => {
-  const { link, linkTo, bck, size, color, children } = props;
+  const { link, linkTo, bck, size, color, children, add } = props;
   const template = (
     <div
       style={{
+        ...add,
         background: bck,
         fontSize: size,
         color,
