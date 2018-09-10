@@ -15,14 +15,6 @@ firebase.initializeApp(config);
 
 const firebaseDB = firebase.database();
 
-// firebaseDB
-//   .ref('matches')
-//   .once('value')
-//   .then(snapshot => {
-//     // code here
-//     console.log('snapshot from firebaseDB', snapshot.val());
-//   });
-
 export const reqToFirebase = refTo => {
   if (refTo) {
     return firebaseDB.ref(refTo);
