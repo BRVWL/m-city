@@ -26,7 +26,15 @@ class Enroll extends Component {
     }
   };
 
-  submitForm = e => {};
+  submitForm = e => {
+    e.preventDefault();
+    let dataToSubmit = {};
+    let formIsValid = true;
+    for (let key in this.state.formData) {
+      dataToSubmit[key] = this.state.formData[key].value;
+    }
+    console.log('Submit', dataToSubmit);
+  };
 
   onChangeField = ({ e, id }) => {
     const { value } = e.target;
@@ -59,6 +67,7 @@ class Enroll extends Component {
             <div className="enroll_title">Enter your email</div>
             <div className="enroll_input">
               <FormField id="email" formData={this.state.formData.email} onChangeField={this.onChangeField} />
+              <button onClick={this.submitForm}>Enroll</button>
             </div>
           </form>
         </div>
