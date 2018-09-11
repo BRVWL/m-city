@@ -1,13 +1,19 @@
 import React from 'react';
 
-const FormField = ({ formData }) => {
+const FormField = ({ id, formData, onChangeField }) => {
+  const showError = () => {
+    let errorMessage = <div className="error_label">{formData.validation && !formData.valid ? formData.validationMessage : null}</div>;
+    return errorMessage;
+  };
+
   const renderTemplate = () => {
     let formTemplate = null;
     switch (formData.element) {
       case 'input':
         formTemplate = (
           <div>
-            <input {...formData.config} value={formData.value} />
+            <input {...formData.config} value={formData.value} onChange={e => onChangeField({ e, id })} />
+            {showError()}
           </div>
         );
         break;
