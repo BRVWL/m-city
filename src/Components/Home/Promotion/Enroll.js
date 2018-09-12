@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Fade from 'react-reveal/Fade';
 import FormField from '../../UI/formFields';
-import { validate } from '../../UI/misc';
+import { validate, firebaseLooper } from '../../UI/misc';
+import { reqToFirebase } from '../../../firebase';
 
 class Enroll extends Component {
   state = {
@@ -26,7 +27,7 @@ class Enroll extends Component {
     }
   };
 
-  resetFormSuccess = () => {
+  resetFormSuccess = type => {
     const newFormData = { ...this.state.formData };
     for (let key in newFormData) {
       newFormData[key].value = '';
@@ -36,8 +37,17 @@ class Enroll extends Component {
     this.setState({
       formData: newFormData,
       formError: false,
-      formSucces: 'Success'
+      formSucces: type ? 'Success' : 'Already in DB'
     });
+    this.succesMessage();
+  };
+
+  succesMessage = () => {
+    setTimeout(() => {
+      this.setState({
+        formSucces: ''
+      });
+    }, 3000);
   };
 
   submitForm = e => {
@@ -49,7 +59,19 @@ class Enroll extends Component {
       formIsValid = this.state.formData[key].valid && formIsValid;
     }
     if (formIsValid) {
-      console.log('Submit', dataToSubmit);
+      reqToFirebase('promotions')
+        .orderByChild('email')
+        .equalTo(dataToSubmit.email)
+        .once('value')
+        .then(res => {
+          if (res.val() === null) {
+            reqToFirebase('promotions').push(dataToSubmit.email);
+            this.resetFormSuccess(true);
+          } else {
+            this.resetFormSuccess(false);
+          }
+        });
+
       this.resetFormSuccess();
     } else {
       this.setState({
