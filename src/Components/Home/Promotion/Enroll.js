@@ -82,26 +82,18 @@ class Enroll extends Component {
 
   onChangeField = ({ e, id }) => {
     const { value } = e.target;
-    // this.setState({
-    //   formData: {
-    //     ...this.state.formData,
-    //     [id]: {
-    //       ...this.state.formData.email,
-    //       value: validate(value)
-    //     }
-    //   }
-    // });
-    const newFormData = { ...this.state.formData };
-    const newElement = { ...newFormData[id] };
-    newElement.value = value;
-    let validData = validate(newElement);
-    newElement.valid = validData[0];
-    newElement.validationMessage = validData[1];
-    newFormData[id] = newElement;
-    this.setState({
-      formError: false,
-      formData: newFormData
-    });
+    this.setState(prevState => ({
+      formData: {
+        ...prevState.formData,
+        [id]: {
+          ...prevState.formData[id],
+          value,
+          valid: validate({ ...prevState.formData[id], value })[0],
+          validationMessage: validate({ ...prevState.formData[id], value })[1]
+        }
+      },
+      formError: false
+    }));
   };
 
   render() {
