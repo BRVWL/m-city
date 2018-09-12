@@ -49,8 +49,8 @@ class SignIn extends Component {
         [id]: {
           ...prevState.formData[id],
           value,
-          valid: validate({ ...prevState.formData[id], value })[0],
-          validationMessage: validate({ ...prevState.formData[id], value })[1]
+          valid: validate(prevState.formData[id], value)[0],
+          validationMessage: validate(prevState.formData[id], value)[1]
         }
       },
       formError: false
