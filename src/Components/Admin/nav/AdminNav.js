@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
+import { firebase } from '../../../firebase';
 
 const AdminNav = props => {
   const links = [
@@ -22,12 +23,6 @@ const AdminNav = props => {
     }
   ];
 
-  const style = {
-    color: '#ffffff',
-    fontWeight: '300',
-    borderBottom: '1px solid #353535'
-  };
-
   const renderItems = () =>
     links.map(link => (
       <Link key={link.title} to={link.linkTo}>
@@ -37,7 +32,34 @@ const AdminNav = props => {
       </Link>
     ));
 
-  return <div>{renderItems()}</div>;
+  const logoutHandler = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(
+        () => {
+          console.log('Log out successfull');
+        },
+        error => {
+          console.log('Log out Error', error);
+        }
+      );
+  };
+
+  return (
+    <div>
+      {renderItems()}
+      <ListItem button style={style} onClick={logoutHandler}>
+        Log out
+      </ListItem>
+    </div>
+  );
+};
+
+const style = {
+  color: '#ffffff',
+  fontWeight: '300',
+  borderBottom: '1px solid #353535'
 };
 
 export default AdminNav;
