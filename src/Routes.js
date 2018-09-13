@@ -5,6 +5,7 @@ import Home from './Components/Home';
 import SignIn from './Components/SignIn';
 import Dashboard from './Components/Admin/Dashboard';
 import PrivateRoute from './Components/AuthRoutes/PrivateRoute';
+import PublicRoute from './Components/AuthRoutes/PublicRoute';
 
 class Routes extends Component {
   render() {
@@ -14,8 +15,8 @@ class Routes extends Component {
         <Layout>
           <Switch>
             <PrivateRoute {...this.props} exact component={Dashboard} path="/dashboard" />
-            <Route exact component={SignIn} path="/sign_in" />
-            <Route exact component={Home} path="/" />
+            <PublicRoute {...this.props} restricted={true} exact component={SignIn} path="/sign_in" />
+            <PublicRoute {...this.props} restricted={false} exact component={Home} path="/" />
           </Switch>
         </Layout>
       </div>
