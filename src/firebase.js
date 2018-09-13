@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/app';
 import 'firebase/database';
+import 'firebase/auth';
 
 const config = {
   apiKey: 'AIzaSyA0Ptb8S_ic-XynBYuNw6VM53D7pPFJ7jo',
@@ -21,3 +22,5 @@ export const reqToFirebase = refTo => {
   }
   return null;
 };
+
+export { firebase };

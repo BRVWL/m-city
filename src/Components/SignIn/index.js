@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FormField from '../UI/formFields';
 import { validate } from '../UI/misc';
+import { firebase } from '../../firebase';
 
 class SignIn extends Component {
   state = {
@@ -39,7 +40,34 @@ class SignIn extends Component {
     }
   };
 
-  handleSubmit = () => {};
+  handleSubmit = e => {
+    e.preventDefault();
+    let dataToSubmit = {};
+    let formIsValid = true;
+    for (let key in this.state.formData) {
+      dataToSubmit[key] = this.state.formData[key].value;
+      formIsValid = this.state.formData[key].valid && formIsValid;
+    }
+    if (formIsValid) {
+      console.log('Data to submit', dataToSubmit);
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(dataToSubmit.email, dataToSubmit.password)
+        .then(res => {
+          console.log('Auth res ', res);
+          this.props.history.push('/dashboard');
+        })
+        .catch(error => {
+          this.setState({
+            formError: true
+          });
+        });
+    } else {
+      this.setState({
+        formError: true
+      });
+    }
+  };
 
   onChangeField = ({ e, id }) => {
     const { value } = e.target;
@@ -65,6 +93,7 @@ class SignIn extends Component {
             <h2>Please login</h2>
             <FormField id="email" formData={this.state.formData.email} onChangeField={this.onChangeField} />
             <FormField id="password" formData={this.state.formData.password} onChangeField={this.onChangeField} />
+            {this.state.formError ? <div className="error_label">Something is wrong, try again!</div> : null}
             <button onClick={this.handleSubmit}>Log in</button>
           </form>
         </div>
