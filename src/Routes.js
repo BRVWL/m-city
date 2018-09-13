@@ -6,6 +6,7 @@ import SignIn from './Components/SignIn';
 import Dashboard from './Components/Admin/Dashboard';
 import PrivateRoute from './Components/AuthRoutes/PrivateRoute';
 import PublicRoute from './Components/AuthRoutes/PublicRoute';
+import AdminMatches from './Components/Admin/Matches';
 
 class Routes extends Component {
   render() {
@@ -14,6 +15,7 @@ class Routes extends Component {
       <div className="Routes">
         <Layout>
           <Switch>
+            <PrivateRoute {...this.props} exact component={AdminMatches} path="/admin_matches" />
             <PrivateRoute {...this.props} exact component={Dashboard} path="/dashboard" />
             <PublicRoute {...this.props} restricted={true} exact component={SignIn} path="/sign_in" />
             <PublicRoute {...this.props} restricted={false} exact component={Home} path="/" />

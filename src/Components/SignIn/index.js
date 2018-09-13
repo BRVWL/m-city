@@ -49,12 +49,10 @@ class SignIn extends Component {
       formIsValid = this.state.formData[key].valid && formIsValid;
     }
     if (formIsValid) {
-      console.log('Data to submit', dataToSubmit);
       firebase
         .auth()
         .signInWithEmailAndPassword(dataToSubmit.email, dataToSubmit.password)
         .then(res => {
-          console.log('Auth res ', res);
           this.props.history.push('/dashboard');
         })
         .catch(error => {

@@ -44,7 +44,7 @@ class Stripes extends Component {
           background: [stripe.background],
           timing: {
             delay: stripe.delay,
-            duration: 200,
+            duration: 400,
             ease: easePolyOut
           },
           opacity: [1],
