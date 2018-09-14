@@ -2,7 +2,9 @@ import React from 'react';
 
 const FormField = ({ id, formData, onChangeField }) => {
   const showError = () => {
-    let errorMessage = <div className="error_label">{formData.validation && !formData.valid ? formData.validationMessage : null}</div>;
+    let errorMessage = (
+      <div className="error_label">{formData.validation && !formData.valid ? formData.validationMessage : null}</div>
+    );
     return errorMessage;
   };
 
@@ -12,7 +14,24 @@ const FormField = ({ id, formData, onChangeField }) => {
       case 'input':
         formTemplate = (
           <div>
+            {formData.showLabel && <div className="label_inputs">{formData.config.label}</div>}
             <input {...formData.config} value={formData.value} onChange={e => onChangeField({ e, id })} />
+            {showError()}
+          </div>
+        );
+        break;
+      case 'select':
+        formTemplate = (
+          <div>
+            {formData.showLabel && <div className="label_inputs">{formData.config.label}</div>}
+            <select value={formData.value} onChange={e => onChangeField({ e, id })}>
+              <option value="">Select one</option>
+              {formData.config.options.map(item => (
+                <option key={item.key} value={item.key}>
+                  {item.value}
+                </option>
+              ))}
+            </select>
             {showError()}
           </div>
         );
