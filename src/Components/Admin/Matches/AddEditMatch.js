@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import AdminLayout from '../../../Hoc/AdminLayout';
 import FormField from '../../UI/formFields';
-import { validate } from '../../UI/misc';
+import { validate, firebaseLooper } from '../../UI/misc';
+import { reqToFirebase, firebaseDB } from '../../../firebase';
+import { messaging } from 'firebase';
 
 class AddEditMatch extends Component {
   state = {
@@ -153,6 +155,63 @@ class AddEditMatch extends Component {
     }
   };
 
+  componentDidMount() {
+    const matchId = this.props.match.params.id;
+    const getTeams = (match, type) => {
+      reqToFirebase('teams')
+        .once('value')
+        .then(res => {
+          const teams = firebaseLooper(res);
+          const teamOptions = [];
+          res.forEach(child => {
+            teamOptions.push({
+              key: child.val().shortName,
+              value: child.val().shortName
+            });
+          });
+          this.updateFields(match, teamOptions, teams, type, matchId);
+        });
+    };
+    if (!matchId) {
+      // ADD MATCH
+    } else {
+      // EDIT MATCH
+      firebaseDB
+        .ref(`matches/${matchId}`)
+        .once('value')
+        .then(res => {
+          const match = res.val();
+          getTeams(match, 'Edit Match');
+        });
+    }
+
+    reqToFirebase('matches')
+      .once('value')
+      .then(res => {
+        console.log('Res matches from serv', res.val());
+      });
+  }
+
+  updateFields = (match, teamOptions, teams, type, matchId) => {
+    const newFormData = { ...this.state.formData }; // make copy state formdata
+    for (let key in newFormData) {
+      if (match) {
+        newFormData[key].value = match[key];
+        newFormData[key].valid = true;
+      }
+      if (key === 'local' || key === 'away') {
+        newFormData[key].config.options = teamOptions;
+      }
+    }
+    console.log('newFormData', newFormData);
+    this.setState({
+      matchId,
+      formType: type,
+      formData: newFormData,
+      teams
+    });
+  };
+
   onChangeField = ({ e, id }) => {
     const { value } = e.target;
     this.setState(prevState => ({
@@ -177,13 +236,43 @@ class AddEditMatch extends Component {
       dataToSubmit[key] = this.state.formData[key].value;
       formIsValid = this.state.formData[key].valid && formIsValid;
     }
+    this.state.teams.forEach(team => {
+      if (team.shortName === dataToSubmit.local) {
+        dataToSubmit['localThmb'] = team.thmb;
+      }
+      if (team.shortName === dataToSubmit.away) {
+        dataToSubmit['awayThmb'] = team.thmb;
+      }
+    });
     if (formIsValid) {
       // code here
+      if (this.state.formType === 'Edit Match') {
+        firebaseDB
+          .ref(`matches/${this.state.matchId}`)
+          .update(dataToSubmit)
+          .then(() => {
+            this.successForm('Updated correctly');
+          })
+          .catch(error => this.setState({ formError: true }));
+      } else {
+        // add match
+      }
     } else {
       this.setState({
         formError: true
       });
     }
+  };
+
+  successForm = message => {
+    this.setState({
+      formSuccess: message
+    });
+    setTimeout(() => {
+      this.setState({
+        formSuccess: ''
+      });
+    }, 2000);
   };
 
   render() {

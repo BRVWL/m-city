@@ -16,11 +16,6 @@ firebase.initializeApp(config);
 
 const firebaseDB = firebase.database();
 
-export const reqToFirebase = refTo => {
-  if (refTo) {
-    return firebaseDB.ref(refTo);
-  }
-  return null;
-};
+export const reqToFirebase = refTo => firebaseDB.ref(refTo);
 
-export { firebase };
+export { firebase, firebaseDB };
