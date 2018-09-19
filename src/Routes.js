@@ -15,6 +15,7 @@ class Routes extends Component {
       <div className="Routes">
         <Layout>
           <Switch>
+            <PrivateRoute {...this.props} exact component={AddEditMatch} path="/admin_matches/edit_match/" />
             <PrivateRoute {...this.props} exact component={AddEditMatch} path="/admin_matches/edit_match/:id" />
             <PrivateRoute {...this.props} exact component={AdminMatches} path="/admin_matches" />
             <PrivateRoute {...this.props} exact component={Dashboard} path="/dashboard" />
