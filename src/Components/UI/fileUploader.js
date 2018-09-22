@@ -21,9 +21,28 @@ class FileUploader extends Component {
     return null;
   }
 
-  handleUploadStart = () => {};
-  handleUploadError = () => {};
-  handleUploadSuccess = () => {};
+  handleUploadStart = () => {
+    this.setState({ isUploading: true });
+  };
+  handleUploadError = () => {
+    this.setState({ isUploading: false });
+  };
+  handleUploadSuccess = filename => {
+    this.setState({
+      name: filename,
+      isUploading: false
+    });
+    firebase
+      .storage()
+      .ref(this.props.dir)
+      .child(filename)
+      .getDownloadURL()
+      .then(res => {
+        this.setState({ fileUrl: res });
+      });
+  };
+
+  uploadAgain = () => {};
 
   render() {
     const { tag, dir } = this.props;
@@ -41,6 +60,24 @@ class FileUploader extends Component {
               onUploadError={this.handleUploadError}
               onUploadSuccess={this.handleUploadSuccess}
             />
+          </div>
+        ) : null}
+        {this.state.isUploading ? (
+          <div
+            className="progress"
+            style={{
+              textAlign: 'center',
+              margin: '30 px'
+            }}>
+            <CircularProgress style={{ color: '#98c6e9' }} thickness={7} />
+          </div>
+        ) : null}
+        {this.state.fileUrl ? (
+          <div className="image_upload_container">
+            <img src={this.state.fileUrl} style={{ width: '100%' }} />
+            <div className="remove" onClick={this.uploadAgain}>
+              Remove
+            </div>
           </div>
         ) : null}
       </div>

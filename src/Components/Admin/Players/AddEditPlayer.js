@@ -165,12 +165,32 @@ class AddEditPlayrs extends Component {
                 resetImg={this.resetImage}
                 storeFileName={this.storeFileName}
               />
-              <FormField id="name" formData={this.state.formData.name} onChangeField={this.onChangeField} />
-              <FormField id="lastname" formData={this.state.formData.lastname} onChangeField={this.onChangeField} />
-              <FormField id="number" formData={this.state.formData.number} onChangeField={this.onChangeField} />
-              <FormField id="position" formData={this.state.formData.position} onChangeField={this.onChangeField} />
+              <FormField
+                id="name"
+                formData={this.state.formData.name}
+                onChangeField={this.onChangeField}
+              />
+              <FormField
+                id="lastname"
+                formData={this.state.formData.lastname}
+                onChangeField={this.onChangeField}
+              />
+              <FormField
+                id="number"
+                formData={this.state.formData.number}
+                onChangeField={this.onChangeField}
+              />
+              <FormField
+                id="position"
+                formData={this.state.formData.position}
+                onChangeField={this.onChangeField}
+              />
               <div className="success_label">{this.state.formSuccess}</div>
-              {this.state.formError ? <div className="error_label">Something is wrong</div> : ''}
+              {this.state.formError ? (
+                <div className="error_label">Something is wrong</div>
+              ) : (
+                ''
+              )}
               <div className="admin_submit">
                 <button onClick={this.handleSubmit}>{this.state.formType}</button>
               </div>
