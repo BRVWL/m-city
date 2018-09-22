@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AdminLayout from '../../../Hoc/AdminLayout';
 import FormField from '../../UI/formFields';
 import { validate, firebaseLooper } from '../../UI/misc';
+import FileUploader from '../../UI/fileUploader';
 import { reqToFirebase, firebaseDB, firebase } from '../../../firebase';
 
 class AddEditPlayrs extends Component {
@@ -89,6 +90,14 @@ class AddEditPlayrs extends Component {
         valid: false,
         validationMessage: '',
         showLabel: true
+      },
+      image: {
+        element: 'image',
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: true
       }
     }
   };
@@ -138,6 +147,9 @@ class AddEditPlayrs extends Component {
     }
   };
 
+  resetImage = () => {};
+  storeFileName = fileName => {};
+
   render() {
     return (
       <AdminLayout>
@@ -145,6 +157,14 @@ class AddEditPlayrs extends Component {
           <h2>{this.state.formType}</h2>
           <div>
             <form onSubmit={this.handleSubmit}>
+              <FileUploader
+                dir="players"
+                tag="Player image"
+                defaultImg={this.state.defaultImg}
+                defaultImgName={this.state.formData.image.value}
+                resetImg={this.resetImage}
+                storeFileName={this.storeFileName}
+              />
               <FormField id="name" formData={this.state.formData.name} onChangeField={this.onChangeField} />
               <FormField id="lastname" formData={this.state.formData.lastname} onChangeField={this.onChangeField} />
               <FormField id="number" formData={this.state.formData.number} onChangeField={this.onChangeField} />
