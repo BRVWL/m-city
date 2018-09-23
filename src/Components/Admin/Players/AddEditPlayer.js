@@ -4,6 +4,7 @@ import FormField from '../../UI/formFields';
 import { validate, firebaseLooper } from '../../UI/misc';
 import FileUploader from '../../UI/fileUploader';
 import { reqToFirebase, firebaseDB, firebase } from '../../../firebase';
+import _ from 'lodash';
 
 class AddEditPlayrs extends Component {
   state = {
@@ -97,7 +98,7 @@ class AddEditPlayrs extends Component {
         validation: {
           required: true
         },
-        valid: true
+        valid: false
       }
     }
   };
@@ -113,8 +114,8 @@ class AddEditPlayrs extends Component {
     }
   }
 
-  onChangeField = ({ e, id }) => {
-    const { value } = e.target;
+  onChangeField = ({ e, id }, content = '') => {
+    const value = _.get(e, 'target.value', content);
     this.setState(prevState => ({
       formData: {
         ...prevState.formData,
@@ -139,7 +140,21 @@ class AddEditPlayrs extends Component {
     }
 
     if (formIsValid) {
-      // code here
+      if (this.state.formType === 'Edit player') {
+        // Edit
+      } else {
+        // Add
+        reqToFirebase('players')
+          .push(dataToSubmit)
+          .then(() => {
+            this.props.history.push('/admin_players');
+          })
+          .catch(error => {
+            this.setState({
+              formError: true
+            });
+          });
+      }
     } else {
       this.setState({
         formError: true
@@ -147,8 +162,26 @@ class AddEditPlayrs extends Component {
     }
   };
 
-  resetImage = () => {};
-  storeFileName = fileName => {};
+  resetImage = () => {
+    this.setState(prevState => ({
+      defaultImg: '',
+      formData: {
+        ...prevState.formData,
+        image: {
+          element: 'image',
+          value: '',
+          validation: {
+            required: true
+          },
+          valid: false
+        }
+      }
+    }));
+  };
+
+  storeFileName = fileName => {
+    this.onChangeField({ id: 'image' }, fileName);
+  };
 
   render() {
     return (

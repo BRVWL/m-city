@@ -11,7 +11,7 @@ class FileUploader extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { defaultImg, defaultImgName, resetImg, storeFileName } = props;
+    const { defaultImg, defaultImgName } = props;
     if (defaultImg) {
       return (state = {
         name: defaultImgName,
@@ -24,9 +24,11 @@ class FileUploader extends Component {
   handleUploadStart = () => {
     this.setState({ isUploading: true });
   };
+
   handleUploadError = () => {
     this.setState({ isUploading: false });
   };
+
   handleUploadSuccess = filename => {
     this.setState({
       name: filename,
@@ -40,9 +42,17 @@ class FileUploader extends Component {
       .then(res => {
         this.setState({ fileUrl: res });
       });
+    this.props.storeFileName(filename);
   };
 
-  uploadAgain = () => {};
+  uploadAgain = () => {
+    this.setState({
+      name: '',
+      isUploading: false,
+      fileUrl: ''
+    });
+    this.props.resetImg();
+  };
 
   render() {
     const { tag, dir } = this.props;
