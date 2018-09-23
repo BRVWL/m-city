@@ -11,6 +11,7 @@ import AddEditMatch from './Components/Admin/Matches/AddEditMatch';
 import AdminPlayers from './Components/Admin/Players';
 import AddEditPlayer from './Components/Admin/Players/AddEditPlayer';
 import TheTeam from './Components/TheTeam';
+import TheMatches from './Components/TheMatches';
 
 class Routes extends Component {
   render() {
@@ -18,6 +19,13 @@ class Routes extends Component {
       <div className="Routes">
         <Layout>
           <Switch>
+            <PrivateRoute
+              {...this.props}
+              restricted={false}
+              exact
+              component={TheMatches}
+              path="/the_matches"
+            />
             <PrivateRoute
               {...this.props}
               restricted={false}
