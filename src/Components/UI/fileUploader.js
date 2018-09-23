@@ -77,7 +77,7 @@ class FileUploader extends Component {
             className="progress"
             style={{
               textAlign: 'center',
-              margin: '30 px'
+              margin: '30px'
             }}>
             <CircularProgress style={{ color: '#98c6e9' }} thickness={7} />
           </div>

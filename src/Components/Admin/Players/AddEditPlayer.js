@@ -5,9 +5,11 @@ import { validate, firebaseLooper } from '../../UI/misc';
 import FileUploader from '../../UI/fileUploader';
 import { reqToFirebase, firebaseDB, firebase } from '../../../firebase';
 import _ from 'lodash';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class AddEditPlayrs extends Component {
   state = {
+    loading: true,
     playerId: '',
     formType: '',
     formError: false,
@@ -108,11 +110,49 @@ class AddEditPlayrs extends Component {
     if (!playerId) {
       // add player
       this.setState({
-        formType: 'Add Player'
+        formType: 'Add Player',
+        loading: false
       });
     } else {
+      firebaseDB
+        .ref(`players/${playerId}`)
+        .once('value')
+        .then(res => {
+          const playerData = res.val();
+          firebase
+            .storage()
+            .ref('players')
+            .child(playerData.image)
+            .getDownloadURL()
+            .then(url => {
+              this.updateFields(playerData, playerId, 'Edit player', url);
+            })
+            .catch(error => {
+              this.updateFields(
+                { ...playerData, image: '' },
+                playerId,
+                'Edit player',
+                ''
+              );
+            });
+        });
     }
   }
+
+  updateFields = (playerData, playerId, type, defaultImg) => {
+    const newFormData = { ...this.state.formData };
+    for (let key in newFormData) {
+      newFormData[key].value = playerData[key];
+      newFormData[key].valid = true;
+    }
+    this.setState({
+      playerId,
+      formType: type,
+      formData: newFormData,
+      defaultImg,
+      loading: false
+    });
+  };
 
   onChangeField = ({ e, id }, content = '') => {
     const value = _.get(e, 'target.value', content);
@@ -138,10 +178,30 @@ class AddEditPlayrs extends Component {
       dataToSubmit[key] = this.state.formData[key].value;
       formIsValid = this.state.formData[key].valid && formIsValid;
     }
-
     if (formIsValid) {
       if (this.state.formType === 'Edit player') {
         // Edit
+        firebaseDB
+          .ref(`players/${this.state.playerId}`)
+          .update(dataToSubmit)
+          .then(() => {
+            this.setState(
+              {
+                formSuccess: 'Updated correctly'
+              },
+              () =>
+                setTimeout(() => {
+                  this.setState({
+                    formSuccess: ''
+                  });
+                }, 2000)
+            );
+          })
+          .catch(error => {
+            this.setState({
+              formError: true
+            });
+          });
       } else {
         // Add
         reqToFirebase('players')
@@ -184,7 +244,17 @@ class AddEditPlayrs extends Component {
   };
 
   render() {
-    return (
+    return this.state.loading ? (
+      <AdminLayout>
+        <div
+          style={{
+            textAlign: 'center',
+            margin: '30px'
+          }}>
+          <CircularProgress style={{ color: '#98c6e9' }} thickness={7} />
+        </div>
+      </AdminLayout>
+    ) : (
       <AdminLayout>
         <div className="editplayers_dialog_wrapper">
           <h2>{this.state.formType}</h2>
