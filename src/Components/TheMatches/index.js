@@ -17,10 +17,11 @@ class TheMatches extends Component {
     reqToFirebase('matches')
       .once('value')
       .then(res => {
+        const matches = reverseArray(firebaseLooper(res));
         this.setState({
           loading: false,
-          matches: reverseArray(firebaseLooper(res)),
-          filterMatches: reverseArray(firebaseLooper(res))
+          matches,
+          filterMatches: matches
         });
       });
   }
