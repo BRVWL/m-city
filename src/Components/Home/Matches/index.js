@@ -10,7 +10,7 @@ const MatchesHome = props => {
           Matches
         </Tag>
         <Blocks />
-        <Tag bck="#ffffff" size="22px" color="#0e1731" link={true} linkTo="/the_teame">
+        <Tag bck="#ffffff" size="22px" color="#0e1731" link={true} linkTo="/the_team">
           See more matches
         </Tag>
       </div>

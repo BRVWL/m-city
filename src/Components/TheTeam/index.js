@@ -50,12 +50,7 @@ class TheTeam extends Component {
           return player.position === category ? (
             <Fade left key={i} delay={i * 20}>
               <div className="item">
-                <PlayerCard
-                  number={player.number}
-                  name={player.name}
-                  lastname={player.lastname}
-                  bck={player.url}
-                />
+                <PlayerCard number={player.number} name={player.name} lastname={player.lastname} bck={player.url} />
               </div>
             </Fade>
           ) : null;
@@ -64,9 +59,7 @@ class TheTeam extends Component {
 
   render() {
     return (
-      <div
-        className="the_team_container"
-        style={{ background: `url(${stripes}) repeat` }}>
+      <div className="the_team_container" style={{ background: `url(${stripes}) repeat` }}>
         {!this.state.loading ? (
           <div>
             <div className="team_category_wrapper">
